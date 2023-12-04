@@ -1,37 +1,54 @@
 // src/Homepage.js
 
 import React from "react";
-import { Container, Header, Segment, Menu, Icon } from "semantic-ui-react";
+import {
+  Container,
+  Header,
+  Segment,
+  Menu,
+  Icon,
+  Grid,
+} from "semantic-ui-react";
 import PageHeader from "./Header";
 import Footer from "./Footer";
 import MenuExampleVerticalDropdown from "./Menu";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Expense from "./Expense,js";
+import Expense from "./Expense";
+import Budget from "./Budget";
+import Menubar from "./Menu";
+import Dashboard from "./Dashboard";
 
-const Homepage = ({ isLoggedIN, username }) => {
+function Homepage({ isLoggedIN, username }) {
   return (
-    <Container>
-      <PageHeader isLoggedIn={isLoggedIN} username={username} />
-
-      <Container>
-        <Menu />
-        <hr />
-        <Router>
-          <Routes>
-            <Route path="/" exact component={Homepage} />
-            <Route path="/Expense" component={Expense} />
-          </Routes>
-        </Router>
+    <Router>
+      <Container style={styles.container}>
+        <PageHeader isLoggedIn={isLoggedIN} username={username} />
+        <Menubar />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/Expense" element={<Expense />} />
+          <Route path="/Budget" element={<Budget />} />
+          {/* <Route path="/contact" component={Contact} /> */}
+        </Routes>
       </Container>
-
-      {/* Header */}
-      <Segment placeholder>
-        <MenuExampleVerticalDropdown />
-      </Segment>
-      {/* Footer */}
-      <Footer />
-    </Container>
+    </Router>
   );
-};
+}
+const styles = {
+  container: {
+    width: "100%",
 
+    backgroundColor: "#f5f5f5",
+    color: "Pink",
+  },
+  title: {
+    flex: 1,
+    color: "white",
+  },
+  closeButton: {
+    cursor: "pointer",
+    fontSize: "1.5em",
+    color: "white",
+  },
+};
 export default Homepage;

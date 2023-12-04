@@ -6,25 +6,28 @@ import {
   Icon,
   Button,
   Segment,
+  Container,
 } from "semantic-ui-react";
 
 const PageHeader = ({ isLoggedIn, username }) => {
   return (
-    <SemanticHeader as="h2" block textAlign="center" style={styles.header}>
-      {isLoggedIn ? (
-        <div>
-          <Icon name="user circle" />
-          <p>`Hello, ${username}!` </p>
-        </div>
-      ) : (
-        <div>
-          <Icon name="dollar" />
-          <p> My Personal Budget</p>
-        </div>
-      )}
+    <Container fluid>
+      <SemanticHeader as="h2" style={styles.header}>
+        {isLoggedIn ? (
+          <div>
+            <Icon name="user circle" />
+            <p>`Hello, ${username}!` </p>
+          </div>
+        ) : (
+          <div>
+            <Icon name="dollar" />
+            <p> My Personal Budget</p>
+          </div>
+        )}
 
-      <div></div>
-    </SemanticHeader>
+        <div></div>
+      </SemanticHeader>
+    </Container>
   );
 };
 const styles = {
@@ -38,11 +41,6 @@ const styles = {
   },
   title: {
     flex: 1,
-    color: "white",
-  },
-  closeButton: {
-    cursor: "pointer",
-    fontSize: "1.5em",
     color: "white",
   },
 };
