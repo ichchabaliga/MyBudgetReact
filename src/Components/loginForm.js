@@ -37,7 +37,10 @@ const LoginForm = ({ handleLogin }) => {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
         console.log("token" + data.access_token);
-        handleLogin();
+        return data;
+      })
+      .then((data) => {
+        handleLogin(JSON.stringify(data.user));
       })
       .catch((error) => console.error("Error logging in:", error));
   };

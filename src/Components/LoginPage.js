@@ -5,6 +5,8 @@ import SignupForm from "./SignUpForm";
 import { Image, Container, Grid } from "semantic-ui-react";
 import PageHeader from "./Header";
 import LoginForm from "./loginForm";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LogInPage = ({ handleLogin }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,13 +18,22 @@ const LogInPage = ({ handleLogin }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const showToast = (info) => {
+    toast.info(info);
+
+    // toast.drain();
+  };
   const handleSignup = () => {
-    // Add any signup logic or navigate to the signup page
+    // Add any signup logic or navig
+    showToast("Signup successful!");
     // onSignup();
+
+    closeModal();
   };
   return (
     <div style={styles.backgroundDiv}>
       <PageHeader />
+      <ToastContainer />
       <Grid columns={2} textAlign="center" verticalAlign="middle">
         <Grid.Column>
           <Image

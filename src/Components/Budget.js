@@ -100,17 +100,25 @@ const Budget = () => {
     try {
       // Make a POST request to add the expense
       await axios
-        .post("http://127.0.0.1:5000/api/budget", [
+        .post(
+          "http://127.0.0.1:5000/api/budget",
+          [
+            {
+              criterion: criterion,
+              amount: amount,
+              month: month,
+            },
+          ],
           {
-            criterion: criterion,
-            amount: amount,
-            month: month,
-          },
-        ])
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
         .then((response) => {
           if (response.status === 200) showToast("Budgets set successfully!");
           const newBudget = {
-            category: criterion,
+            criterion: criterion,
             amount: parseFloat(amount),
             month: month,
           };
@@ -146,7 +154,11 @@ const Budget = () => {
 
     // Make the API request
     axios
-      .get("/budget")
+      .get("/budget", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((response) => {
         // Extract the data from the response
         const budget = response.data.budget;

@@ -87,13 +87,21 @@ const Expense = () => {
     try {
       // Make a POST request to add the expense
       axios
-        .post("http://127.0.0.1:5000/api/expense", [
+        .post(
+          "http://127.0.0.1:5000/api/expense",
+          [
+            {
+              budget_id: criterion,
+              amount: amount,
+              description: description,
+            },
+          ],
           {
-            budget_id: criterion,
-            amount: amount,
-            description: description,
-          },
-        ])
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
         .then((response) => {
           if (response.status === 200) showToast();
           const newExpense = {
@@ -135,7 +143,11 @@ const Expense = () => {
 
     // Make the API request
     axios
-      .get("/expense")
+      .get("/expense", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((response) => {
         // Extract the data from the response
         const Expense = response.data.expenses;
@@ -146,7 +158,11 @@ const Expense = () => {
       .then(() => {
         const apiUrl = "http://127.0.0.1:5000/api/budget";
         axios
-          .get(apiUrl)
+          .get(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
           .then((response) => {
             // Extract the data from the response
             const budget = response.data.budget;

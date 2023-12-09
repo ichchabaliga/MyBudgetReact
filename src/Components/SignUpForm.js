@@ -12,13 +12,30 @@ const SignupForm = ({ onSignup }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({ username, password, email, birthdate }),
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((response) => {
+        response.json();
+        if (response.status === 200) {
+          setBirthdate("");
+          setEmail("");
+          setPassword("");
+          setUsername("");
+          onSignup();
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
       .catch((error) => console.error("Error signing up:", error));
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add any validation logic here

@@ -4,7 +4,10 @@ import {
   Header,
   Segment,
   Menu,
+  Image,
   Icon,
+  Dimmer,
+  Loader,
   Grid,
 } from "semantic-ui-react";
 import PageHeader from "./Header";
@@ -25,24 +28,29 @@ const Dashboard = () => {
 
   // const [chartData5, setChartData5] = useState({});
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:5000/api/chartdata");
-        const data = response.data;
-        console.log(data);
+    const fetchData = () => {
+      axios
+        .get("/chartdata", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          const data = response.data;
+          console.log(data);
 
-        setChartData1(data.chardata1);
-        setChartData2(data.chardata2);
-        setChartData3(data.chardata3);
-        setChartData4(data.chardata4);
-        setChartData5(data.chardata5);
-        setChartData6(data.chardata6);
-        setDataLoaded(true);
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-      }
+          setChartData1(data.chardata1);
+          setChartData2(data.chardata2);
+          setChartData3(data.chardata3);
+          setChartData4(data.chardata4);
+          setChartData5(data.chardata5);
+          setChartData6(data.chardata6);
+          setDataLoaded(true);
+        })
+        .catch((error) => {
+          console.error("Error fetching chart data:", error);
+        });
     };
-
     fetchData();
   }, [localStorage.getItem("token")]);
 
@@ -136,7 +144,7 @@ const Dashboard = () => {
           </Grid>
         ) : (
           <div>
-            <h1>Loading...</h1>
+            <Loader active>Loading Dashboard Data...</Loader>
           </div>
         )}
       </Container>

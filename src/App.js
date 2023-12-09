@@ -18,23 +18,23 @@ function App() {
   const [userResponded, setUserResponded] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (jwtToken) {
-          console.log(jwtToken);
-          console.log(isLoggedIn);
-          setIsLoggedIn(true);
-          setUser(JSON.parse(localStorage.getItem("user")));
-          console.log(user);
-        }
-      } catch (error) {
-        console.error("Error checking login status:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (jwtToken) {
+  //         console.log(jwtToken);
+  //         console.log(isLoggedIn);
+  //         setIsLoggedIn(true);
+  //         setUser(JSON.parse(localStorage.getItem("user")));
+  //         console.log(user);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error checking login status:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, [localStorage.getItem("token")]);
+  //   fetchData();
+  // }, [localStorage.getItem("token")]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -43,15 +43,16 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const handleLogin = () => {
+  const handleLogin = (user) => {
     console.log("handleLogin");
     const token = localStorage.getItem("token");
-
+    console.log(user);
     if (token) {
-      const user = localStorage.getItem("user");
-      console.log(user.username);
+      // const user = localStorage.getItem("user");
+      // console.log(user.username);
+      setUser(JSON.parse(user));
       setJwtToken(token);
-      setUser(user);
+      setIsLoggedIn(true);
     }
   };
   // };
