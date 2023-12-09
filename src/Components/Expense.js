@@ -1,7 +1,8 @@
 // CreateExpenseComponent.js
+import "react-toastify/dist/ReactToastify.css";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./middleware";
 import {
   Button,
   Form,
@@ -15,11 +16,13 @@ import {
   Container,
   Segment,
 } from "semantic-ui-react";
+import { toast, ToastContainer } from "react-toastify";
 
 const Expense = () => {
   const [Expenses, setExpenses] = useState([]);
   const [criterion, setcriterion] = useState("");
   const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
   const [budget, setBudget] = useState([]);
   const styles = {
     container: {
@@ -66,6 +69,11 @@ const Expense = () => {
     },
   };
 
+  const showToast = (info) => {
+    toast.info(info);
+
+    // toast.drain();
+  };
   // Usage example:
   // styles.container, styles.form, styles.list, etc.
 
@@ -78,24 +86,29 @@ const Expense = () => {
 
     try {
       // Make a POST request to add the expense
-      const response = await axios.post("http://127.0.0.1:5000/api/Expense", [
-        {
-          criterion: criterion,
-          amount: amount,
-        },
-      ]);
+      axios
+        .post("http://127.0.0.1:5000/api/expense", [
+          {
+            budget_id: criterion,
+            amount: amount,
+            description: description,
+          },
+        ])
+        .then((response) => {
+          if (response.status === 200) showToast();
+          const newExpense = {
+            category: criterion,
+            amount: parseFloat(amount),
+            description: description,
+          };
+          setExpenses([...Expenses, newExpense]);
+
+          // Clear form fields
+          setcriterion("");
+          setAmount("");
+        });
 
       // Update Expenses array with the new Expense
-      const newExpense = {
-        id: Date.now(),
-        category: criterion,
-        amount: parseFloat(amount),
-      };
-      setExpenses([...Expenses, newExpense]);
-
-      // Clear form fields
-      setcriterion("");
-      setAmount("");
     } catch (error) {
       // Handle errors, e.g., show an error message to the user
       console.error("Error adding expense:", error.message);
@@ -122,7 +135,7 @@ const Expense = () => {
 
     // Make the API request
     axios
-      .get(apiUrl1)
+      .get("/expense")
       .then((response) => {
         // Extract the data from the response
         const Expense = response.data.expenses;
@@ -160,30 +173,47 @@ const Expense = () => {
   // }, []);
   return (
     <Segment raised>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Grid columns={2}>
         <GridColumn>
           <div style={styles.formStyle}>
             <h2>Create Expense</h2>
             <Form>
-              <Form.Group widths="equal">
-                <Form.Field
-                  control={Input}
-                  label="Description"
-                  placeholder="For eg: Rent"
-                />
+              {/* <Form.Group unstackable widths={2}> */}
+              <Form.Field
+                control={Input}
+                label="Description"
+                placeholder="For eg: Rent"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <br />
+              <Form.Select
+                label="Category"
+                options={budget}
+                placeholder="Gender"
+                onChange={(e, { value }) => setcriterion(value)}
+              />
+              <br />
 
-                <Form.Select
-                  label="Category"
-                  options={budget}
-                  placeholder="Gender"
-                />
-
-                <Form.Field
-                  control={Input}
-                  label="Amount"
-                  placeholder="Enter amount in $"
-                />
-              </Form.Group>
+              <Form.Field
+                control={Input}
+                label="Amount"
+                placeholder="Enter amount in $"
+                onChange={(e) => setAmount(e.target.value)}
+              />
+              <br />
+              {/* </Form.Group> */}
               <Button
                 type="button"
                 onClick={handleCreateExpense}

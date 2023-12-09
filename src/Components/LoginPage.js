@@ -27,9 +27,9 @@ const LogInPage = ({ handleLogin }) => {
         <Grid.Column>
           <Image
             centered
-            size="Massive"
+            size="massive"
             src="https://www.pngall.com/wp-content/uploads/7/Budget-PNG-Free-Image.png"
-            alt="BSDK"
+            alt="BudgetCalculator"
           ></Image>
         </Grid.Column>
         <Grid.Column>

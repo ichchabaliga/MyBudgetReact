@@ -27,11 +27,18 @@ const LoginForm = ({ handleLogin }) => {
     })
       .then((response) => {
         if (response.status === 200) {
-          handleLogin(true);
+          console.log("Login successful!");
+          return response.json();
+        } else if (response.status === 401) {
+          alert("Incorrect username or password");
         }
-        return response.json();
       })
-      .then((data) => console.log(data))
+      .then((data) => {
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("token" + data.access_token);
+        handleLogin();
+      })
       .catch((error) => console.error("Error logging in:", error));
   };
 

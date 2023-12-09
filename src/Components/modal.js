@@ -9,7 +9,9 @@ const Modal = ({ isOpen, onClose, title, content, actions }) => {
         <Icon name="close" style={styles.closeButton} onClick={onClose} />
       </SemanticModal.Header>
       <SemanticModal.Content>{content}</SemanticModal.Content>
-      <SemanticModal.Actions wrapped></SemanticModal.Actions>
+      <SemanticModal.Actions wrapped>
+        {actions ? actions : null}
+      </SemanticModal.Actions>
     </SemanticModal>
   );
 };

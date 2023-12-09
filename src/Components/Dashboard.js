@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Header,
@@ -9,136 +9,136 @@ import {
 } from "semantic-ui-react";
 import PageHeader from "./Header";
 import Footer from "./Footer";
-import axios from "axios";
+import axios from "./middleware";
 
 import Menubar from "./Menu";
 import ChartComponent from "./ChartComponent";
 const Dashboard = () => {
-  //   useEffect(() => {
-  //     const res = axios.get("http://localhost:5000/api/budget").then((res) => {
-  //       console.log(res.data);
-  //       const chartData1 = res.data.chartData1;
-  //       const chartData2 = res.data.chartData2;
-  //       const chartData3 = res.data.chartData3;
-  //       const chartData4 = res.data.chartData4;
-  //       const chartData5 = res.data.chartData5;
-  //     });
-  //   }, []);
-  const chartData = {
-    labels: ["January", "February", "March", "April", "May"],
-    datasets: [
-      {
-        label: "Budeget",
-        data: [65, 59, 80, 81, 56],
-        backgroundColor: [
-          "#050A30",
-          "#000C66",
-          "#0000FF",
-          "#7EC8E3",
-          "#0E86D4",
-          "#055C9D",
-        ],
-      },
-    ],
-  };
-  const chartData2 = {
-    data: {
-      labels: ["January", "February", "March", "April", "May"],
-      datasets: [
-        {
-          label: "Budget",
-          data: [65, 59, 80, 81, 56],
-          backgroundColor: "#7EC8E3",
-        },
-        { label: "Expense", data: [6, 9, 8, 8, 5], backgroundColor: "#055C9D" },
-      ],
-    },
-    option: {
-      plugins: {
-        title: {
-          display: true,
-          text: "Chart.js Bar Chart - Stacked",
-        },
-      },
-      responsive: true,
-      scales: {
-        x: {
-          stacked: true,
-        },
-        y: {
-          stacked: true,
-        },
-      },
-    },
-  };
+  const [chartData1, setChartData1] = useState({});
+  const [chartData2, setChartData2] = useState({});
+  const [chartData3, setChartData3] = useState({});
+  const [chartData4, setChartData4] = useState({});
+  const [chartData5, setChartData5] = useState({});
+  const [Istoken, setIstoken] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [chartData6, setChartData6] = useState({});
+
+  // const [chartData5, setChartData5] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:5000/api/chartdata");
+        const data = response.data;
+        console.log(data);
+
+        setChartData1(data.chardata1);
+        setChartData2(data.chardata2);
+        setChartData3(data.chardata3);
+        setChartData4(data.chardata4);
+        setChartData5(data.chardata5);
+        setChartData6(data.chardata6);
+        setDataLoaded(true);
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+      }
+    };
+
+    fetchData();
+  }, [localStorage.getItem("token")]);
+
   return (
     <>
       <Container style={styles.container}>
-        <Grid columns={3}>
-          <Grid.Row>
-            <Grid.Column>
-              <Segment raised>
-                <Header as="h3" textAlign="center">
-                  <Icon name="dollar" />
-                  <Header.Content>Monthly Expense</Header.Content>
-                </Header>
-                <ChartComponent chartData={chartData} type="line" />
-              </Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Segment raised>
-                <Header as="h3" textAlign="center">
-                  <Icon name="dollar" />
-                  <Header.Content>Expense Vs Budget</Header.Content>
-                </Header>
-                <ChartComponent
-                  chartData={chartData2.data}
-                  type="bar"
-                  options={chartData2.option}
-                />
-              </Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Segment raised>
-                <Header as="h3" textAlign="center">
-                  <Icon name="dollar" />
-                  <Header.Content> Total Budget</Header.Content>
-                </Header>
-                <ChartComponent chartData={chartData} type="pie" />
-              </Segment>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <Segment raised>
-                <Header as="h3" textAlign="center">
-                  <Icon name="dollar" />
-                  <Header.Content>Category-wise Expense</Header.Content>
-                </Header>
-                <ChartComponent chartData={chartData} type="pie" />
-              </Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Segment raised>
-                <Header as="h3" textAlign="center">
-                  <Icon name="dollar" />
-                  <Header.Content>Expense</Header.Content>
-                </Header>
-                <ChartComponent chartData={chartData} type="bar" />
-              </Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Segment raised>
-                <Header as="h3" textAlign="center">
-                  <Icon name="dollar" />
-                  <Header.Content>Balance</Header.Content>
-                </Header>
-                <ChartComponent chartData={chartData} type="bar" />
-              </Segment>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <Footer />
+        {dataLoaded ? (
+          <Grid columns={2}>
+            <Grid.Row>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Monthly Expense</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData1} type="line" />
+                </Segment>
+              </Grid.Column>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Monthly Budget</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData5} type="line" />
+                </Segment>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content> Total Budget</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData3} type="pie" />
+                </Segment>
+              </Grid.Column>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Category-wise Expense</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData4} type="pie" />
+                </Segment>
+              </Grid.Column>
+              {/* <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Expense</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData} type="bar" />
+                </Segment>
+              </Grid.Column>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Balance</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData} type="bar" />
+                </Segment>
+              </Grid.Column> */}
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Expense Vs Budget</Header.Content>
+                  </Header>
+                  <ChartComponent
+                    chartData={chartData2.data}
+                    type="bar"
+                    options={chartData2.options}
+                  />
+                </Segment>
+              </Grid.Column>
+              <Grid.Column>
+                <Segment raised>
+                  <Header as="h3" textAlign="center">
+                    <Icon name="dollar" />
+                    <Header.Content>Daily Expense</Header.Content>
+                  </Header>
+                  <ChartComponent chartData={chartData6} type="line" />
+                </Segment>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        ) : (
+          <div>
+            <h1>Loading...</h1>
+          </div>
+        )}
       </Container>
     </>
   );

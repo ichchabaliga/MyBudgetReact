@@ -1,7 +1,8 @@
 // CreateBudgetComponent.js
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./middleware";
 import {
   Button,
   Form,
@@ -19,6 +20,7 @@ const Budget = () => {
   const [budgets, setBudgets] = useState([]);
   const [criterion, setcriterion] = useState("");
   const [amount, setAmount] = useState("");
+  const [month, setMonth] = useState();
   const styles = {
     container: {
       display: "flex",
@@ -63,9 +65,30 @@ const Budget = () => {
       padding: "8px 15px",
     },
   };
-
+  function mapToKeyValueArray(budgetData) {
+    return budgetData.map((item, index) => ({
+      key: index + 1,
+      text: item,
+      value: index + 1,
+    }));
+  }
   // Usage example:
   // styles.container, styles.form, styles.list, etc.
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month_dropdown = mapToKeyValueArray(months);
 
   const handleCreateBudget = async () => {
     // Validate input
@@ -76,24 +99,30 @@ const Budget = () => {
 
     try {
       // Make a POST request to add the expense
-      const response = await axios.post("http://127.0.0.1:5000/api/budget", [
-        {
-          criterion: criterion,
-          amount: amount,
-        },
-      ]);
+      await axios
+        .post("http://127.0.0.1:5000/api/budget", [
+          {
+            criterion: criterion,
+            amount: amount,
+            month: month,
+          },
+        ])
+        .then((response) => {
+          if (response.status === 200) showToast("Budgets set successfully!");
+          const newBudget = {
+            category: criterion,
+            amount: parseFloat(amount),
+            month: month,
+          };
+          setBudgets([...budgets, newBudget]);
+
+          // Clear form fields
+          setcriterion("");
+          setAmount("");
+          setMonth("");
+        });
 
       // Update budgets array with the new budget
-      const newBudget = {
-        id: Date.now(),
-        category: criterion,
-        amount: parseFloat(amount),
-      };
-      setBudgets([...budgets, newBudget]);
-
-      // Clear form fields
-      setcriterion("");
-      setAmount("");
     } catch (error) {
       // Handle errors, e.g., show an error message to the user
       console.error("Error adding expense:", error.message);
@@ -106,13 +135,18 @@ const Budget = () => {
       .toFixed(2);
   };
 
+  const showToast = (info) => {
+    toast.info(info);
+
+    // toast.drain();
+  };
   useEffect(() => {
     // Define the API endpoint from which you want to fetch data
     const apiUrl = "http://127.0.0.1:5000/api/budget";
 
     // Make the API request
     axios
-      .get(apiUrl)
+      .get("/budget")
       .then((response) => {
         // Extract the data from the response
         const budget = response.data.budget;
@@ -126,11 +160,29 @@ const Budget = () => {
   }, []);
   return (
     <Segment raised>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Grid columns={2}>
         <GridColumn>
           <div style={styles.formStyle}>
             <h2>Create Budget</h2>
             <Form>
+              <Form.Select
+                label="Month"
+                options={month_dropdown}
+                placeholder="January"
+                onChange={(e, { value }) => setMonth(value)}
+              />
               <Label htmlFor="criterion">Budget Category:</Label>
               <Input
                 type="text"
@@ -173,6 +225,9 @@ const Budget = () => {
                   <Table.HeaderCell style={styles.thStyle}>
                     Amount
                   </Table.HeaderCell>
+                  <Table.HeaderCell style={styles.thStyle}>
+                    Month
+                  </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -183,6 +238,9 @@ const Budget = () => {
                     </Table.Cell>
                     <Table.Cell style={styles.tdStyle}>
                       {budget.amount.toFixed(2)}
+                    </Table.Cell>
+                    <Table.Cell style={styles.tdStyle}>
+                      {months[budget.month - 1]}
                     </Table.Cell>
                   </Table.Row>
                 ))}

@@ -7,25 +7,30 @@ import {
   Button,
   Segment,
   Container,
+  Grid,
 } from "semantic-ui-react";
 
-const PageHeader = ({ isLoggedIn, username }) => {
+const PageHeader = ({ isLoggedIn, username, handlelogout }) => {
   return (
-    <Container fluid>
+    <Container fluid style={styles.header}>
       <SemanticHeader as="h2" style={styles.header}>
-        {isLoggedIn ? (
-          <div>
-            <Icon name="user circle" />
-            <p>`Hello, ${username}!` </p>
-          </div>
-        ) : (
-          <div>
+        <Grid>
+          <Grid.Column width={10}>
             <Icon name="dollar" />
-            <p> My Personal Budget</p>
-          </div>
-        )}
-
-        <div></div>
+            <SemanticHeader.Content>My Personal Budget</SemanticHeader.Content>
+          </Grid.Column>
+          {isLoggedIn ? (
+            <Grid.Column width={10} textAlign="right">
+              <Icon name="user circle" />
+              <SemanticHeader.Content>
+                Hello, {username}!
+              </SemanticHeader.Content>
+              <Button onClick={handlelogout} color="red">
+                Logout
+              </Button>
+            </Grid.Column>
+          ) : null}
+        </Grid>
       </SemanticHeader>
     </Container>
   );
@@ -38,6 +43,7 @@ const styles = {
     alignItems: "center",
     backgroundColor: "purple",
     color: "white",
+    padding: "10px",
   },
   title: {
     flex: 1,
