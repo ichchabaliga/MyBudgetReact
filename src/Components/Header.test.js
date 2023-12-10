@@ -1,4 +1,3 @@
-// Header.test.js
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import PageHeader from "./Header";
@@ -21,6 +20,4 @@ describe("PageHeader Component", () => {
     // Assert
     expect(mockHandleLogout).toHaveBeenCalled();
   });
-
-  // Add more tests as needed
 });
