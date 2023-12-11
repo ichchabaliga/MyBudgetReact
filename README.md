@@ -21,3 +21,7 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 For Backend run :
 ### `Python3 app.py`
+
+Launches the Flask app which hosts the backend APIs
+
+In Case the app doesn’t  run as expected, please contact me at ibaliga@uncc.edu
