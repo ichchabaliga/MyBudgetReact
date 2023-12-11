@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@applitools/eyes-webdriverio": "^5.50.1",
     "@testing-library/user-event": "^13.5.0",
     "buffer": "^6.0.3",
     "chart.js": "^4.4.0",

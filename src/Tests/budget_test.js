@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-
+const runVisualTest = require("./applitools.test.js");
 async function click(page, selector) {
   await page.click(selector);
 }
@@ -25,7 +25,7 @@ async function typeText(page, selector, text) {
     page,
     "#root > div > div > div.ui.center.aligned.middle.aligned.two.column.grid > div:nth-child(2) > div > div > div > div:nth-child(6) > button"
   );
-
+  await runVisualTest.runVisualTest();
   await waitForText(page, "Sign-Up for an Account");
   await typeText(
     page,
